@@ -1,0 +1,53 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 1. Global Safety Net: Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Standard security helpers
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Schema validation for UserProgress document
+    function isValidUserProgress(data, userId) {
+      return data.userId == userId
+        && data.userId == request.auth.uid
+        && data.profile is map
+        && data.measurements is list
+        && data.measurements.size() <= 100
+        && data.dailyLogs is list
+        && data.dailyLogs.size() <= 200
+        && data.workouts is list
+        && data.workouts.size() <= 1000
+        && data.updatedAt is string
+        && data.updatedAt.size() <= 100;
+    }
+
+    // Rules for User Progress collection
+    match /users/{userId} {
+      allow get: if isOwner(userId) && isValidId(userId);
+      
+      allow create: if isOwner(userId) 
+        && isValidId(userId)
+        && isValidUserProgress(request.resource.data, userId);
+        
+      allow update: if isOwner(userId) 
+        && isValidId(userId)
+        && isValidUserProgress(request.resource.data, userId)
+        && request.resource.data.userId == resource.data.userId; // Prevent transferring ownership
+        
+      allow delete: if isOwner(userId) && isValidId(userId);
+    }
+  }
+}

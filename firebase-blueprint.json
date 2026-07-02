@@ -1,0 +1,50 @@
+{
+  "entities": {
+    "UserProgress": {
+      "title": "User Progress State",
+      "description": "The unified state of the user including profile, workout logs, dietary meal records, and body measurements",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Unique identifier of the user (uid)"
+        },
+        "profile": {
+          "type": "object",
+          "description": "User profile with body stats, goals, and formulas"
+        },
+        "measurements": {
+          "type": "array",
+          "description": "Weekly weight and biometric measurements history"
+        },
+        "dailyLogs": {
+          "type": "array",
+          "description": "Daily food intake, meals, and adherence checklist logs"
+        },
+        "workouts": {
+          "type": "array",
+          "description": "Workout sessions history, active calories, and strength notes"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When this progress data was last synchronized with Firestore"
+        }
+      },
+      "required": [
+        "userId",
+        "profile",
+        "measurements",
+        "dailyLogs",
+        "workouts",
+        "updatedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProgress",
+      "description": "Fully backed up user diet and workout state to allow cross-device sync"
+    }
+  }
+}

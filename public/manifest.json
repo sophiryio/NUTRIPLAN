@@ -1,0 +1,22 @@
+{
+  "name": "Remix: NutriPlan 16",
+  "short_name": "NutriPlan16",
+  "description": "Programa de Recomposição Corporal e Planejamento Nutricional de 16 Semanas",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "/pwa-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/pwa-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

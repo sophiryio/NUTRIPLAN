@@ -1,0 +1,8 @@
+{
+  "name": "Remix: NutriPlan 16",
+  "description": "A science-based 16-week spreadsheet tracking metabolism, macros, meals, and workouts for aesthetic and effective weight loss results.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
