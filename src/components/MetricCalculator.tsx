@@ -3,10 +3,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { UserProfile, MeasurementLog } from '../types';
 import { calculateBMR, calculateTDEE, calculateTargetMacros } from '../data/defaults';
-import { Info, Award, Settings, User as UserIcon, Flame, Heart, ChevronRight, Scale, Calendar } from 'lucide-react';
+import { HealthQuestionnaire } from './HealthQuestionnaire';
+import { HealthNutritionalGuide } from './HealthNutritionalGuide';
+import { Info, Award, Settings, User as UserIcon, Flame, Heart, ChevronRight, Scale, Calendar, Stethoscope, ChevronDown, ChevronUp } from 'lucide-react';
 
 interface MetricCalculatorProps {
   profile: UserProfile;
@@ -25,6 +27,7 @@ export const MetricCalculator: React.FC<MetricCalculatorProps> = ({
   onMeasurementsChange,
   onStartDateChange,
 }) => {
+  const [showHealthForm, setShowHealthForm] = useState(false);
   // Find weight for the selected week
   const selectedWeekWeight = useMemo(() => {
     if (selectedWeekFilter === 'all') {
@@ -551,7 +554,46 @@ export const MetricCalculator: React.FC<MetricCalculatorProps> = ({
           </div>
         </div>
 
+        {/* Avaliação de Saúde e Condições Clínicas Expandable Card */}
+        <div id="health-conditions-section" className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs flex flex-col gap-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-rose-500/10 text-rose-600 border border-rose-500/20 flex items-center justify-center">
+                <Stethoscope className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-slate-900">Avaliação de Saúde & Condições Clínicas</h3>
+                <p className="text-xs text-slate-500">Ajuste seu plano de acordo com diagnósticos de diabetes, hipertensão, SOP, tireoide, etc.</p>
+              </div>
+            </div>
 
+            <button
+              id="toggle-health-form-btn"
+              onClick={() => setShowHealthForm((prev) => !prev)}
+              className="bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold px-3.5 py-2 rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer"
+            >
+              {showHealthForm ? 'Ocultar Questionário' : 'Preencher / Editar Saúde'}
+              {showHealthForm ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+            </button>
+          </div>
+
+          {showHealthForm ? (
+            <div className="mt-2">
+              <HealthQuestionnaire
+                profile={profile}
+                onProfileChange={onProfileChange}
+                onClose={() => setShowHealthForm(false)}
+              />
+            </div>
+          ) : (
+            <div className="mt-1">
+              <HealthNutritionalGuide
+                profile={profile}
+                onOpenQuestionnaire={() => setShowHealthForm(true)}
+              />
+            </div>
+          )}
+        </div>
 
         {/* Decorative Minimalist Illustration Card */}
         <div className="bg-slate-900 text-white border border-slate-950 rounded-xl p-5 shadow-sm relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6">

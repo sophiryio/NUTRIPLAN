@@ -3,6 +3,25 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+export interface HealthConditions {
+  diabetes?: boolean;
+  diabetesType?: 'type1' | 'type2' | 'prediabetes' | 'gestational';
+  insulinResistance?: boolean;
+  sop?: boolean; // Síndrome dos Ovários Policísticos
+  hypertension?: boolean; // Hipertensão Arterial
+  hypothyroidism?: boolean; // Hipotireoidismo
+  hyperthyroidism?: boolean; // Hipertireoidismo
+  cardiovascular?: boolean; // Problemas Cardiovasculares
+  highCholesterol?: boolean; // Colesterol Alto / Triglicerídeos
+  celiac?: boolean; // Doença Celíaca / Sensibilidade ao Glúten
+  lactoseIntolerance?: boolean; // Intolerância à Lactose
+  gastritisReflux?: boolean; // Gastrite / Refluxo
+  kidneyIssues?: boolean; // Doença Renal / Cálculo Renal
+  pregnancyLactation?: boolean; // Gestante / Lactante
+  otherConditions?: string;
+  medications?: string;
+}
+
 export interface UserProfile {
   name: string;
   age: number;
@@ -20,6 +39,7 @@ export interface UserProfile {
   manualProtein?: number;
   manualCarbs?: number;
   manualFat?: number;
+  healthConditions?: HealthConditions;
   startDate?: string; // YYYY-MM-DD
   photoUrl?: string; // photo URL or base64 data url
   avatarGender?: 'male' | 'female' | 'nonbinary';

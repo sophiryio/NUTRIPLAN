@@ -6,7 +6,8 @@
 import React, { useState, useMemo } from 'react';
 import { DailyLog, FoodItem, Meal, MealFoodEntry, UserProfile, WorkoutEntry } from '../types';
 import { DEFAULT_FOODS, calculateBMR, calculateTDEE, calculateTargetMacros } from '../data/defaults';
-import { Plus, Trash2, Search, Utensils, Droplet, Sparkles, Scale, Percent, Check, Flame, TrendingDown, TrendingUp, Info, Activity, Dumbbell, Zap } from 'lucide-react';
+import { generateHealthGuidance } from '../data/healthData';
+import { Plus, Trash2, Search, Utensils, Droplet, Sparkles, Scale, Percent, Check, Flame, TrendingDown, TrendingUp, Info, Activity, Dumbbell, Zap, Stethoscope, ShieldAlert, Apple, AlertTriangle } from 'lucide-react';
 
 const formatDateBR = (dateStr: string) => {
   try {
@@ -296,6 +297,10 @@ export const MealPlanner: React.FC<MealPlannerProps> = ({
   const calorieDiff = actualTotals.calories - targetCalories;
   const isDeficit = calorieDiff <= 0;
 
+  const healthGuidance = useMemo(() => {
+    return generateHealthGuidance(profile.healthConditions);
+  }, [profile.healthConditions]);
+
   return (
     <div id="meal-planner-root" className="grid grid-cols-1 xl:grid-cols-3 gap-6">
       {/* Days of the Week Selection Bar */}
@@ -355,6 +360,37 @@ export const MealPlanner: React.FC<MealPlannerProps> = ({
 
       {/* Col 1 & 2: Meal Diary */}
       <div id="diary-container" className="xl:col-span-2 flex flex-col gap-6">
+        {/* Active Clinical Conditions Banner */}
+        {healthGuidance.activeConditions.length > 0 && (
+          <div className="bg-rose-950/90 text-white border border-rose-900 rounded-xl p-4 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-lg bg-rose-500/20 border border-rose-500/30 text-rose-400 flex items-center justify-center shrink-0">
+                <Stethoscope className="w-5 h-5" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h3 className="text-xs font-bold text-white uppercase tracking-wider">
+                    Alertas de Nutrição Clínica Ativos
+                  </h3>
+                  <span className="text-[9px] font-bold bg-rose-500/30 text-rose-200 border border-rose-500/40 px-2 py-0.5 rounded-full">
+                    {healthGuidance.activeConditions.length} Condições
+                  </span>
+                </div>
+                <p className="text-[11px] text-rose-200/90 mt-0.5">
+                  {healthGuidance.activeConditions.map((c) => c.title).join(' • ')}
+                </p>
+              </div>
+            </div>
+
+            {healthGuidance.tips.length > 0 && (
+              <div className="text-[11px] bg-slate-900/80 border border-slate-800 rounded-lg p-2.5 max-w-sm text-slate-200">
+                <span className="font-bold text-amber-400 block mb-0.5">💡 Dica de Ouro da sua Dieta:</span>
+                {healthGuidance.tips[0].description}
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Daily Macros Progress bar */}
         <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">

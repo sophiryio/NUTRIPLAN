@@ -26,7 +26,9 @@ import { MeasurementsTracker } from './components/MeasurementsTracker';
 import { ProgressCharts } from './components/ProgressCharts';
 import { InteractiveAvatar } from './components/InteractiveAvatar';
 import { ConnectionsManager } from './components/ConnectionsManager';
-import { Dumbbell, Ruler, Scale, Utensils, Award, Compass, Heart, Activity, LineChart, Calendar, Database } from 'lucide-react';
+import { HealthQuestionnaire } from './components/HealthQuestionnaire';
+import { HealthNutritionalGuide } from './components/HealthNutritionalGuide';
+import { Dumbbell, Ruler, Scale, Utensils, Award, Compass, Heart, Activity, LineChart, Calendar, Database, Stethoscope } from 'lucide-react';
 import { motion } from 'motion/react';
 
 export default function App() {
@@ -125,7 +127,7 @@ export default function App() {
   });
 
   // --- Active Navigation Tab ---
-  const [activeTab, setActiveTab] = useState<'metas' | 'dieta' | 'treinos' | 'medidas' | 'progresso' | 'conexoes'>('metas');
+  const [activeTab, setActiveTab] = useState<'metas' | 'dieta' | 'treinos' | 'medidas' | 'progresso' | 'saude' | 'conexoes'>('metas');
 
   // --- Sync State to LocalStorage on Change ---
   useEffect(() => {
@@ -661,6 +663,18 @@ export default function App() {
             Progresso & Gráficos
           </button>
           <button
+            id="tab-saude"
+            onClick={() => setActiveTab('saude')}
+            className={`py-3.5 px-1 text-xs font-semibold border-b-2 flex items-center gap-1.5 transition-all whitespace-nowrap cursor-pointer ${
+              activeTab === 'saude'
+                ? 'border-rose-600 text-rose-600 font-bold'
+                : 'border-transparent text-slate-400 hover:text-slate-800'
+            }`}
+          >
+            <Stethoscope className="w-4 h-4 text-rose-500" />
+            Saúde &amp; Condições
+          </button>
+          <button
             id="tab-conexoes"
             onClick={() => setActiveTab('conexoes')}
             className={`py-3.5 px-1 text-xs font-semibold border-b-2 flex items-center gap-1.5 transition-all whitespace-nowrap cursor-pointer ${
@@ -796,6 +810,17 @@ export default function App() {
               workouts={workouts}
               dailyLogs={dailyLogs}
             />
+          )}
+          {activeTab === 'saude' && (
+            <div className="flex flex-col gap-6">
+              <HealthQuestionnaire
+                profile={profile}
+                onProfileChange={setProfile}
+              />
+              <HealthNutritionalGuide
+                profile={profile}
+              />
+            </div>
           )}
           {activeTab === 'conexoes' && (
             <ConnectionsManager 

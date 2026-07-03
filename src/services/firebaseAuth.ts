@@ -64,6 +64,11 @@ export const googleSignIn = async (): Promise<{ user: User; accessToken: string 
     return { user: result.user, accessToken: cachedAccessToken };
   } catch (error: any) {
     console.error('Sign in error:', error);
+    if (error?.code === 'auth/unauthorized-domain') {
+      alert(`Domínio não autorizado (${window.location.hostname}). Adicione "${window.location.hostname}" no Firebase Console -> Authentication -> Settings -> Authorized Domains.`);
+    } else if (error?.code === 'auth/popup-blocked') {
+      alert('O navegador bloqueou a janela pop-up do Google. Por favor, permita janelas pop-up para este site.');
+    }
     throw error;
   } finally {
     isSigningIn = false;
